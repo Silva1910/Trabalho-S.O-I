@@ -17,7 +17,7 @@ public class LeituraController {
 	String caminhoPasta = "C:\\temp\\hol.json"; // Caminho do arquivo JSON Conforme o escopo do professor
 
 	
-	public void realizarLeitura() throws Exception {
+	public void RealizarLeitura() throws Exception {
 		try {
 
 			BufferedReader reader = new BufferedReader(new FileReader(caminhoPasta));
@@ -75,8 +75,8 @@ public class LeituraController {
 	        for (int i = 0; i < nome.length(); i++) {
 	            char caractere = nome.charAt(i);
 
-	            // Adicionar um espaço antes de cada letra maiúscula, exceto no início do nome
-	            if (Character.isUpperCase(caractere) && i > 0) {
+	         
+	            if (Character.isUpperCase(caractere) && i > 0) {    // Adicionar um espaço antes de cada letra maiúscula, exceto no início do nome
 	                nomeFormatado.append(" ");
 	            }
 
@@ -85,4 +85,6 @@ public class LeituraController {
 
 	        return nomeFormatado.toString();
 	    }
+
+	
 }
