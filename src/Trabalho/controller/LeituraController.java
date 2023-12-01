@@ -16,7 +16,7 @@ public class LeituraController {
 
 	String caminhoPasta = "C:\\temp\\hol.json"; // Caminho do arquivo JSON Conforme o escopo do professor
 
-	
+	static int i =1;
 	public void RealizarLeitura() throws Exception {
 		try {
 
@@ -43,7 +43,8 @@ public class LeituraController {
 				String nome = valor(dados, "\"name\""); // procura o nome conforme o escopo
 				String site = valor(dados, "\"web_pages\""); // procura o site conforme o escopo
 			    nome = formatarNome(nome); // chamada da função para formatar o nome
-				System.out.println(" o  nome da Universidade e -> " + nome + ", || e o Site dela e -> " + site); // faz a impressão deles conforme o escopo
+				System.out.println(i + " o  nome da Universidade e -> " + nome + ", || e o Site dela e -> " + site); // faz a impressão deles conforme o escopo
+			i++;
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
