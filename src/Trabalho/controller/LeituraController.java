@@ -1,91 +1,57 @@
 package Trabalho.controller;
-/*
- * O TEXTO FOI COMENTADO COM O OBJETIVO DE DEIXAR CLARO OS PASSOS E PARA FACILITAR A ANALISE DO CODIGO DO PROFESSOR 
-
- * TENDO COMO OBJETIVO A NOTA MAXIMA DO TRABALHO
- * 
- */
-
 
 import java.io.BufferedReader;
-
 import java.io.FileReader;
-import java.io.IOException;
 
-public class LeituraController {  
+public class LeituraController {
 
-	String caminhoPasta = "C:\\temp\\hol.json"; // Caminho do arquivo JSON Conforme o escopo do professor
+    String caminhoPasta = "C:\\temp\\hol.json";
 
-	static int i =1;
-	public void RealizarLeitura() throws Exception {
-		try {
+    static int i = 1;
+    public void realizarLeitura() throws Exception {
+        try (BufferedReader reader = new BufferedReader(new FileReader(caminhoPasta))) {
+            StringBuilder jsonConteudo = new StringBuilder();
+            String linha;
 
-			BufferedReader reader = new BufferedReader(new FileReader(caminhoPasta));
-			StringBuilder jsonConteudo = new StringBuilder();
-			String linha;
+            while ((linha = reader.readLine()) != null) {
+                jsonConteudo.append(linha.trim());
+            }
 
-			while ((linha = reader.readLine()) != null) { // Ler o conteúdo do arquivo JSON
-				jsonConteudo.append(linha);
-			}
+            // Processar todos os objetos encontrados no conteúdo JSON
+            String[] objetosJson = jsonConteudo.toString().split("\\},\\s*\\{");
+            for (String objetoJson : objetosJson) {
+                // Adicione { e } para formar um objeto JSON completo
+                if (!objetoJson.startsWith("{")) {
+                    objetoJson = "{" + objetoJson;
+                }
+                if (!objetoJson.endsWith("}")) {
+                    objetoJson = objetoJson + "}";
+                }
 
-			reader.close();
+                processarObjeto(objetoJson);
+            }
+        }
+    }
 
-			
-			String limparJson = jsonConteudo.toString().replaceAll("\\s", "");  // Remover espaços em branco desnecessários
 
-			
-			String[] entradas = limparJson.substring(1, limparJson.length() - 1).split("\\},\\{"); // Analisar manualmente o JSON
+    private void processarObjeto(String objetoJson) {
+        // Selecione os campos desejados
+        String nomeUniversidade = extrairValor(objetoJson, "name");
+        String webPage = extrairValor(objetoJson, "web_pages");
 
-			
-			for (String entrou : entradas) { // Extrair os valores relevantes do JSON
-				
-				String[] dados = entrou.split(",");
-				String nome = valor(dados, "\"name\""); // procura o nome conforme o escopo
-				String site = valor(dados, "\"web_pages\""); // procura o site conforme o escopo
-			    nome = formatarNome(nome); // chamada da função para formatar o nome
-				System.out.println(i + " o  nome da Universidade e -> " + nome + ", || e o Site dela e -> " + site); // faz a impressão deles conforme o escopo
-			i++;
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
+        // Agora você pode usar 'nomeUniversidade' e 'webPage' conforme necessário
+        System.out.println(i +" " + "Nome da Universidade: " + nomeUniversidade + " || " + " e o site -> " + webPage);
+    i++;
+    }
 
-	private static String valor(String[] dados, String palavra) {
-		for (String chave : dados) {
-			if (chave.contains(palavra)) {
-				String[] parts = chave.split(":");
-				if (parts.length > 1) {
-				
-					StringBuilder valorBuilder = new StringBuilder(parts[1]);
-					for (int i = 2; i < parts.length; i++) {  // extrai o valor que esta sendo procurado
-						valorBuilder.append(":").append(parts[i]);
-					}
-					String palavraFinal = valorBuilder.toString().trim();
-
-				
-					return palavraFinal.replaceAll("[\"\\[\\]{}]", "").trim(); 	// Remove caracteres especiais e espaços extras
-				}
-			}
-		}
-		return ""; // se não encontrou retorna uma string vazia
-	}
-	  private static String formatarNome(String nome) {
-	        StringBuilder nomeFormatado = new StringBuilder();
-
-	        for (int i = 0; i < nome.length(); i++) {
-	            char caractere = nome.charAt(i);
-
-	         
-	            if (Character.isUpperCase(caractere) && i > 0) {    // Adicionar um espaço antes de cada letra maiúscula, exceto no início do nome
-	                nomeFormatado.append(" ");
-	            }
-
-	            nomeFormatado.append(caractere);
-	        }
-
-	        return nomeFormatado.toString();
-	    }
-
-	
+    // Método auxiliar para extrair valores de campos específicos em um objeto JSON
+    private String extrairValor(String json, String campo) {
+        int indiceCampo = json.indexOf("\"" + campo + "\":");
+        if (indiceCampo != -1) {
+            int indiceInicioValor = json.indexOf("\"", indiceCampo + campo.length() + 3);
+            int indiceFimValor = json.indexOf("\"", indiceInicioValor + 1);
+            return json.substring(indiceInicioValor + 1, indiceFimValor);
+        }
+        return null;
+    }
 }

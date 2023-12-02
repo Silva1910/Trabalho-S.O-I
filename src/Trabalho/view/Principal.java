@@ -18,6 +18,6 @@ public class Principal {
 		    
 	        LeituraController leituraController = new LeituraController();
 
-	        leituraController.RealizarLeitura();     // Chamar o método realizarLeitura()
+	        leituraController.realizarLeitura();     // Chamar o método realizarLeitura()
 	    }
 }
