@@ -5,53 +5,43 @@ import java.io.FileReader;
 
 public class LeituraController {
 
-    String caminhoPasta = "C:\\temp\\hol.json";
+	String caminho = "C:\\temp\\hol.json"; // caminho definido pelo enunciado
 
-    static int i = 1;
-    public void realizarLeitura() throws Exception {
-        try (BufferedReader reader = new BufferedReader(new FileReader(caminhoPasta))) {
-            StringBuilder jsonConteudo = new StringBuilder();
-            String linha;
+	static int numFaculdades = 1; // contador 
 
-            while ((linha = reader.readLine()) != null) {
-                jsonConteudo.append(linha.trim());
-            }
+	public void realizarLeitura() throws Exception {
+		try (BufferedReader reader = new BufferedReader(new FileReader(caminho))) {
+			StringBuilder jsonConteudo = new StringBuilder();
+			String linhas;
 
-            // Processar todos os objetos encontrados no conteúdo JSON
-            String[] objetosJson = jsonConteudo.toString().split("\\},\\s*\\{");
-            for (String objetoJson : objetosJson) {
-                // Adicione { e } para formar um objeto JSON completo
-                if (!objetoJson.startsWith("{")) {
-                    objetoJson = "{" + objetoJson;
-                }
-                if (!objetoJson.endsWith("}")) {
-                    objetoJson = objetoJson + "}";
-                }
+			while ((linhas = reader.readLine()) != null) {
+				jsonConteudo.append(linhas.trim());  // le o conteudo do arquivo
+			}
 
-                processarObjeto(objetoJson);
-            }
-        }
-    }
+			String[] linhasJson = jsonConteudo.toString().split("\\},\\s*\\{"); // separa cada parte do json
+			for (String linha : linhasJson) { // separa cada parte do arquivo para processar
 
+				processarObjeto(linha); // chama a funcao para achar os campos do enunciado e imprimir
+			}
+		}
+	}
 
-    private void processarObjeto(String objetoJson) {
-        // Selecione os campos desejados
-        String nomeUniversidade = extrairValor(objetoJson, "name");
-        String webPage = extrairValor(objetoJson, "web_pages");
+	private void processarObjeto(String linha) {
 
-        // Agora você pode usar 'nomeUniversidade' e 'webPage' conforme necessário
-        System.out.println(i +" " + "Nome da Universidade: " + nomeUniversidade + " || " + " e o site -> " + webPage);
-    i++;
-    }
+		String nomeUniversidade = extrairValor(linha, "name"); // funcao que acha o campo nome da universidade conforme o enunciado
+		String site = extrairValor(linha, "web_pages"); // funcao que acha o campo do website da universidade  conforme o enunciado
 
-    // Método auxiliar para extrair valores de campos específicos em um objeto JSON
-    private String extrairValor(String json, String campo) {
-        int indiceCampo = json.indexOf("\"" + campo + "\":");
-        if (indiceCampo != -1) {
-            int indiceInicioValor = json.indexOf("\"", indiceCampo + campo.length() + 3);
-            int indiceFimValor = json.indexOf("\"", indiceInicioValor + 1);
-            return json.substring(indiceInicioValor + 1, indiceFimValor);
-        }
-        return null;
-    }
+		System.out.println(numFaculdades + " " + "Nome da Universidade: " + nomeUniversidade + " || " + " e o site -> " + site); // imprime os valores conforme o enunciado
+		numFaculdades++; // contador para deixar claro a quantidade de faculdades que possuem no json
+	}
+
+	private String extrairValor(String linha, String campo) {
+		int indiceCampo = linha.indexOf("\"" + campo + "\":"); // procura aonde acontece a primeira aparição do nome apresentado
+		if (indiceCampo != -1) { // se index of não achar ele fica como -1 ai nesse caso verifica se achou o  campo se sim faz o bloco do if
+			int indiceInicioCampo = linha.indexOf("\"", indiceCampo + campo.length() + 3); // procura onde começa a palavra
+			int indiceFimCampo = linha.indexOf("\"", indiceInicioCampo + 1); // procura o fim da palavra
+			return linha.substring(indiceInicioCampo + 1, indiceFimCampo); // retorna a palavra com base no inicio e no fim
+		}
+		return null; // se o campo não for encontrado retorna null
+	}
 }
