@@ -5,7 +5,7 @@ import java.io.FileReader;
 
 public class LeituraController {
 
-	String caminho = "C:\\temp\\hol.json"; // caminho definido pelo enunciado
+	String caminho = "C:\\TEMP\\hol.json"; // caminho definido pelo enunciado
 
 	static int numFaculdades = 1; // contador 
 
@@ -25,7 +25,7 @@ public class LeituraController {
 			}
 		}
 	}
-
+//***************************************************************************************************************************************
 	private void processarObjeto(String linha) {
 
 		String nomeUniversidade = extrairValor(linha, "name"); // funcao que acha o campo nome da universidade conforme o enunciado
@@ -35,6 +35,10 @@ public class LeituraController {
 		numFaculdades++; // contador para deixar claro a quantidade de faculdades que possuem no json
 	}
 
+	
+	
+	
+// ****************************************************************************************************************************************
 	private String extrairValor(String linha, String campo) {
 		int indiceCampo = linha.indexOf("\"" + campo + "\":"); // procura aonde acontece a primeira aparição do nome apresentado
 		if (indiceCampo != -1) { // se index of não achar ele fica como -1 ai nesse caso verifica se achou o  campo se sim faz o bloco do if
